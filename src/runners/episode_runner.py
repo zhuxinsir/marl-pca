@@ -51,6 +51,7 @@ class EpisodeRunner:
         terminated = False
         episode_return = 0
         self.mac.init_hidden(batch_size=self.batch_size)
+        n_agents = self.env.get_env_info()["n_agents"]
 
         while not terminated:
 
@@ -58,7 +59,7 @@ class EpisodeRunner:
                 "state": [self.env.get_state()],
                 "avail_actions": [self.env.get_avail_actions()],
                 "obs": [self.env.get_obs()],
-                "adj_matrix": [self.env.get_visibility_matrix()]
+                "adj_mat": [self.env.get_visibility_matrix()[:, 0: n_agents]]
             }
 
             self.batch.update(pre_transition_data, ts=self.t)
@@ -84,7 +85,7 @@ class EpisodeRunner:
             "state": [self.env.get_state()],
             "avail_actions": [self.env.get_avail_actions()],
             "obs": [self.env.get_obs()],
-            "adj_matrix": [self.env.get_visibility_matrix()]
+            "adj_mat": [self.env.get_visibility_matrix()[:, 0: n_agents]]
         }
         self.batch.update(last_data, ts=self.t)
 
